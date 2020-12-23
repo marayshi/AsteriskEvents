@@ -7,7 +7,20 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use PAMI\Client\Impl\ClientImpl as PamiClient;
+use PAMI\Message\Event\AGIExecStartEvent;
+use PAMI\Message\Event\BridgeCreateEvent;
+use PAMI\Message\Event\BridgeDestroyEvent;
+use PAMI\Message\Event\BridgeEnterEvent;
+use PAMI\Message\Event\BridgeLeaveEvent;
+use PAMI\Message\Event\ConfbridgeJoinEvent;
+use PAMI\Message\Event\ConfbridgeLeaveEvent;
+use PAMI\Message\Event\ConfbridgeStartEvent;
+use PAMI\Message\Event\DialBeginEvent;
+use PAMI\Message\Event\DialStateEvent;
 use PAMI\Message\Event\EventMessage;
+use PAMI\Message\Event\HangupEvent;
+use PAMI\Message\Event\NewstateEvent;
+use PAMI\Message\Event\VarSetEvent;
 
 
 class AsteriskEvents extends Command
@@ -58,10 +71,25 @@ class AsteriskEvents extends Command
 
             $pamiClient->registerEventListener(
                 function (EventMessage $event) use ($pamiClient) {
-                    AsteriskEventJob::dispatch($event->getRawContent());
+                    if (
+                        $event instanceof DialBeginEvent
+                        || $event instanceof DialStateEvent
+                        || $event instanceof NewstateEvent
+                        || $event instanceof HangupEvent
+                        || $event instanceof BridgeEnterEvent
+                        || $event instanceof ConfbridgeJoinEvent
+                        || $event instanceof ConfbridgeLeaveEvent
+                        || $event instanceof BridgeLeaveEvent
+                        || $event instanceof BridgeDestroyEvent
+                        || $event instanceof ConfbridgeStartEvent
+                        || $event instanceof BridgeCreateEvent
+                        || $event instanceof VarSetEvent
+                        || $event instanceof AGIExecStartEvent
+                    ){
+                        AsteriskEventJob::dispatch($event->getRawContent());
+                    }
                 }
             );
-
 
             $running = true;
 // Main loop
