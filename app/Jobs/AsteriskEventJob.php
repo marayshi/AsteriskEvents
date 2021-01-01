@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,6 +34,14 @@ class AsteriskEventJob implements ShouldQueue
      */
     public function handle()
     {
-        Log::critical($this->event);
+        //Log::critical($this->event);
+        $client = new Client();
+        try {
+            $response = $client->request('POST', "", [
+                'form_params' => $this->event
+            ]);
+        }catch (ClientException $clientException){
+            Log::critical($clientException->getMessage());
+        }
     }
 }
