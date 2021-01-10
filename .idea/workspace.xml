@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="99cbe8f3-feb1-4684-a2c2-5a0f6ff185a8" name="Default Changelist" comment="post events to aws">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/AsteriskEvents.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/AsteriskEvents.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +175,7 @@
       <workItem from="1609394034833" duration="2562000" />
       <workItem from="1609534735866" duration="11040000" />
       <workItem from="1609838402099" duration="574000" />
-      <workItem from="1610121303094" duration="3069000" />
+      <workItem from="1610121303094" duration="3516000" />
     </task>
     <task id="LOCAL-00001" summary="show asterisk events in log">
       <created>1608723227281</created>
@@ -198,7 +198,14 @@
       <option name="project" value="LOCAL" />
       <updated>1609534759427</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="post events to aws">
+      <created>1610306983721</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1610306983723</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
