@@ -71,6 +71,7 @@ class AsteriskEvents extends Command
 
             $pamiClient->registerEventListener(
                 function (EventMessage $event) use ($pamiClient) {
+                    Log::critical(get_class($event));
                     if (
                         $event instanceof DialBeginEvent
                         || $event instanceof DialStateEvent
@@ -86,7 +87,7 @@ class AsteriskEvents extends Command
                         || $event instanceof VarSetEvent
                         || $event instanceof AGIExecStartEvent
                     ){
-                        AsteriskEventJob::dispatch($event->getRawContent());
+                       // AsteriskEventJob::dispatch($event->getRawContent());
                     }
                 }
             );
