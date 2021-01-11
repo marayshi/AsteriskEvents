@@ -7,6 +7,9 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use PAMI\Client\Impl\ClientImpl as PamiClient;
+use PAMI\Exception\PAMIException;
+use PAMI\Message\Action\HangupAction;
+use PAMI\Message\Action\OriginateAction;
 use PAMI\Message\Event\AGIExecStartEvent;
 use PAMI\Message\Event\BridgeCreateEvent;
 use PAMI\Message\Event\BridgeDestroyEvent;
@@ -19,7 +22,9 @@ use PAMI\Message\Event\DialBeginEvent;
 use PAMI\Message\Event\DialStateEvent;
 use PAMI\Message\Event\EventMessage;
 use PAMI\Message\Event\HangupEvent;
+use PAMI\Message\Event\NewextenEvent;
 use PAMI\Message\Event\NewstateEvent;
+use PAMI\Message\Event\OriginateResponseEvent;
 use PAMI\Message\Event\VarSetEvent;
 
 
@@ -71,23 +76,66 @@ class AsteriskEvents extends Command
 
             $pamiClient->registerEventListener(
                 function (EventMessage $event) use ($pamiClient) {
-                    Log::critical(get_class($event));
+                   // var_dump(get_class($event));
                     if (
-                        $event instanceof DialBeginEvent
-                        || $event instanceof DialStateEvent
-                        || $event instanceof NewstateEvent
-                        || $event instanceof HangupEvent
-                        || $event instanceof BridgeEnterEvent
-                        || $event instanceof ConfbridgeJoinEvent
-                        || $event instanceof ConfbridgeLeaveEvent
-                        || $event instanceof BridgeLeaveEvent
-                        || $event instanceof BridgeDestroyEvent
-                        || $event instanceof ConfbridgeStartEvent
-                        || $event instanceof BridgeCreateEvent
-                        || $event instanceof VarSetEvent
-                        || $event instanceof AGIExecStartEvent
+//                        $event instanceof DialBeginEvent
+//                        || $event instanceof DialStateEvent
+//                        || $event instanceof NewstateEvent
+//                        || $event instanceof HangupEvent
+//                        || $event instanceof BridgeEnterEvent
+//                        || $event instanceof ConfbridgeJoinEvent
+//                        || $event instanceof ConfbridgeLeaveEvent
+//                        || $event instanceof BridgeLeaveEvent
+//                        || $event instanceof BridgeDestroyEvent
+//                        || $event instanceof ConfbridgeStartEvent
+//                        || $event instanceof BridgeCreateEvent
+//                      //  || $event instanceof VarSetEvent
+//                        || $event instanceof AGIExecStartEvent
+//                    $event instanceof BridgeCreateEvent ||
+//                    $event instanceof OriginateResponseEvent ||
+                    $event instanceof DialStateEvent
                     ){
                        // AsteriskEventJob::dispatch($event->getRawContent());
+
+                        if ($event->getDialStatus() === "PROGRESS"){
+
+
+                           // var_dump($event->getCallerIDNum());
+
+                            $cond = true;
+                            if ((string)$event->getCallerIDNum() === "3133555555" AND $cond){
+                                try {
+                                    var_dump($event->getRawContent());
+
+                                    $originateMsg = new OriginateAction("Local/970599588188@ownagev88");
+                                    $originateMsg->setAccount(1);
+                                    $originateMsg->setCallerId("Ringless " . "<3133444444>");
+                                    $originateMsg->setApplication("PlayBack");
+                                    $originateMsg->setData("tt-monkeys");
+                                    // $originateMsg->setTimeout(2);
+
+                                    $originateMsg->setAsync(false);
+                                    $orgresp = $pamiClient->send($originateMsg);
+
+                                    $pamiClient->process();
+
+                                    $pamiClient->send(new HangupAction($event->getDestChannel()));
+
+                                    $cond = false;
+
+                                }catch (PAMIException $PAMIException) {
+                                    Log::critical($PAMIException->getMessage());
+                                }catch (\Exception $exception){
+                                    Log::critical($exception->getMessage());
+                                }
+
+                                $cond = false;
+
+                            }
+
+
+
+                        }
                     }
                 }
             );
