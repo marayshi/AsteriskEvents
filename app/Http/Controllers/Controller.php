@@ -32,6 +32,7 @@ class Controller extends BaseController
         cache()->store('redis')->put('bar', 'baz', 600); // 10 Minutes
 
 
+
         try {
             $pamiClient = new PamiClient($options);
             $pamiClient->open();
